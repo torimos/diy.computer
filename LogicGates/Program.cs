@@ -97,6 +97,18 @@ namespace LogicGates
         }
     }
 
+    public class SRLatch
+    {
+        public SRLatch()
+        {
+            Q = new Random(DateTime.Now.Second).Next(2) == 1;
+        }
+        public void Set() => Q = true;
+        public void Reset() => Q = false;
+        public bool Q { get; private set; }
+        public bool nQ => !Q;
+    }
+
     public static class Processor
     {
         public static void alu(bool[] a, bool[] b, ref bool[] q, bool substract,
@@ -218,8 +230,8 @@ namespace LogicGates
     {
         // gates - done
         // adder - done
-        // alu
-        // latch
+        // alu  - done
+        // latch  - done
         // flip-flop
         // register
         // memory
