@@ -122,30 +122,51 @@ namespace LogicGates
         }
     }
 
-    class Program
+    public static class BinUtils
     {
-
-        // gates - done
-        // adder - done
-        // alu
-        // latch
-        // flip-flop
-        // register
-        // memory
-        // tri-state
-        // bus
-        static void Main(string[] args)
+        public static bool[] toBits(long value)
         {
-            const int bitsCount = 64;
-            var r = new bool[bitsCount];
-            bool cb = false, zf = false, nf = false;
-            Processor.alu(toBits(bitsCount, -6917529027641081856), toBits(bitsCount, 6917529027641081857), ref r, true, ref cb, ref nf, ref zf);
-            Console.WriteLine($"r:{fromBits(r)} c:{cb} n:{nf} z:{zf}");
+            return toBits((sizeof(long) * 8), value);
+        }
+
+        public static bool[] toBits(ulong value)
+        {
+            return toBits((sizeof(ulong) * 8), (long)value);
+        }
+
+        public static bool[] toBits(int value)
+        {
+            return toBits((sizeof(int) * 8), value);
+        }
+
+        public static bool[] toBits(uint value)
+        {
+            return toBits((sizeof(uint) * 8), value);
+        }
+
+        public static bool[] toBits(short value)
+        {
+            return toBits((sizeof(short) * 8), value);
+        }
+
+        public static bool[] toBits(ushort value)
+        {
+            return toBits((sizeof(ushort) * 8), value);
+        }
+
+        public static bool[] toBits(char value)
+        {
+            return toBits((sizeof(char) * 8), value);
+        }
+
+        public static bool[] toBits(byte value)
+        {
+            return toBits((sizeof(byte) * 8), value);
         }
 
         static bool[] toBits(int numBits, long value)
         {
-            if (numBits > (sizeof(long)*8))
+            if (numBits > (sizeof(long) * 8))
                 throw new ArgumentOutOfRangeException("numBits");
             bool[] r = new bool[numBits];
             if (value > 0)
@@ -164,20 +185,53 @@ namespace LogicGates
             return r;
         }
 
-        static long fromBits(bool[] bits)
+        public static long fromBitsSigned(bool[] bits)
         {
-            if (bits.Length > (sizeof(long)*8))
-                throw new ArgumentOutOfRangeException("bits.Length");
+            if (bits.Length > (sizeof(long) * 8))
+                throw new ArgumentOutOfRangeException("bits");
             long r = 0;
             for (int i = 0; i < bits.Length - 1; i++)
             {
                 r = r | ((long)(bits[i] ? 1 : 0) << i);
             }
-            if (bits[bits.Length-1])
+            if (bits[bits.Length - 1])
             {
                 r -= ((long)1 << (bits.Length - 1));
             }
             return r;
+        }
+
+        public static ulong fromBitsUnsigned(bool[] bits)
+        {
+            if (bits.Length > (sizeof(ulong) * 8))
+                throw new ArgumentOutOfRangeException("bits");
+            ulong r = 0;
+            for (int i = 0; i < bits.Length; i++)
+            {
+                r = r | ((ulong)(bits[i] ? 1 : 0) << i);
+            }
+            return r;
+        }
+    }
+
+    class Program
+    {
+        // gates - done
+        // adder - done
+        // alu
+        // latch
+        // flip-flop
+        // register
+        // memory
+        // tri-state
+        // bus
+        static void Main(string[] args)
+        {
+            const int bitsCount = 64;
+            var r = new bool[bitsCount];
+            bool cb = false, zf = false, nf = false;
+            Processor.alu(BinUtils.toBits(-6917529027641081856L), BinUtils.toBits(1L), ref r, true, ref cb, ref nf, ref zf);
+            Console.WriteLine($"r:{BinUtils.fromBitsSigned(r)} c:{cb} n:{nf} z:{zf}");
         }
     }
 }
